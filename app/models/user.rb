@@ -38,14 +38,9 @@ class User < ApplicationRecord
   has_many :consents, through: :user_consents, inverse_of: :users
 
   validates :email, uniqueness: {case_sensitive: false}
-  before_validation :monkeypatch_email_bidx
 
   scope :consented_to, ->(c) { joins(:user_consents).where(user_consents: {consent: c}) }
 
-  # Required because the blind_index doesn't seem to like the email column
-  def monkeypatch_email_bidx
-    compute_email_bidx
-  end
 
   # entry point for exporting user's personal information
   def export_personal_information
