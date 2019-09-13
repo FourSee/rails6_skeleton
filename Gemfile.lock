@@ -401,7 +401,7 @@ DEPENDENCIES
   awesome_print
   base62-rb
   blind_index
-  bootsnap (>= 1.1.0)
+  bootsnap
   bullet
   byebug
   connection_pool

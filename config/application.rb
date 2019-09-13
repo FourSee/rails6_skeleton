@@ -23,7 +23,7 @@ Bundler.require(*Rails.groups)
 module WhoIsDoingCodeReview
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
+    config.load_defaults "6.0"
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -36,10 +36,6 @@ module WhoIsDoingCodeReview
     config.api_only = true
     config.time_zone = 'UTC'
     config.gdpr_retention_period = 3.years
-
-    config.generators do |g|
-      g.orm :active_record, primary_key_type: :uuid
-    end
 
     config.after_initialize do
       Rails.application.credentials.env = RailsEnv.new

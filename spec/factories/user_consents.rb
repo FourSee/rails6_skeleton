@@ -4,13 +4,13 @@
 #
 # Table name: user_consents
 #
-#  id         :uuid             not null, primary key, indexed => [consented, up_to_date, user_id]
+#  id         :bigint(8)        not null, primary key, indexed => [consented, up_to_date, user_id]
 #  consented  :boolean          default(FALSE), not null, indexed => [consent_id, user_id, up_to_date], indexed => [up_to_date, user_id, id]
 #  up_to_date :boolean          default(TRUE), not null, indexed => [consent_id, user_id, consented], indexed => [consented, user_id, id]
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  consent_id :uuid             indexed => [user_id, consented, up_to_date], indexed
-#  user_id    :uuid             indexed => [consent_id, consented, up_to_date], indexed, indexed => [consented, up_to_date, id]
+#  consent_id :bigint(8)        indexed => [user_id, consented, up_to_date], indexed
+#  user_id    :bigint(8)        indexed => [consent_id, consented, up_to_date], indexed, indexed => [consented, up_to_date, id]
 #
 # Indexes
 #

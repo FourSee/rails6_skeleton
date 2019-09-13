@@ -16,19 +16,22 @@ ActiveRecord::Schema.define(version: 2019_09_13_065822) do
   enable_extension "citext"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
-  create_table "consents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "consents", force: :cascade do |t|
+    t.uuid "uuid", default: -> { "uuid_generate_v4()" }
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "title_translations"
     t.jsonb "content_translations"
     t.citext "key", null: false
     t.index ["key"], name: "index_consents_on_key", unique: true
+    t.index ["uuid"], name: "index_consents_on_uuid", unique: true
   end
 
-  create_table "user_consents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id"
-    t.uuid "consent_id"
+  create_table "user_consents", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "consent_id"
     t.boolean "consented", default: false, null: false
     t.boolean "up_to_date", default: true, null: false
     t.datetime "created_at", null: false
@@ -39,7 +42,7 @@ ActiveRecord::Schema.define(version: 2019_09_13_065822) do
     t.index ["user_id"], name: "index_user_consents_on_user_id"
   end
 
-  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "encrypted_password"
     t.string "encrypted_email_iv"
     t.string "encrypted_email"
@@ -50,8 +53,8 @@ ActiveRecord::Schema.define(version: 2019_09_13_065822) do
     t.string "encrypted_username_iv"
     t.string "encrypted_username"
     t.uuid "uuid"
-    t.string "encrypted_email_bidx"
-    t.index ["encrypted_email_bidx"], name: "index_users_on_encrypted_email_bidx"
+    t.string "email_bidx"
+    t.index ["email_bidx"], name: "index_users_on_email_bidx", unique: true
     t.index ["id", "encrypted_email", "encrypted_email_iv"], name: "user_email"
     t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end

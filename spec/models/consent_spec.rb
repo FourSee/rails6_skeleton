@@ -4,22 +4,26 @@
 #
 # Table name: consents
 #
-#  id                   :uuid             not null, primary key
+#  id                   :bigint(8)        not null, primary key
 #  content_translations :jsonb
 #  key                  :citext           not null, indexed
 #  title_translations   :jsonb
+#  uuid                 :uuid             indexed
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #
 # Indexes
 #
-#  index_consents_on_key  (key) UNIQUE
+#  index_consents_on_key   (key) UNIQUE
+#  index_consents_on_uuid  (uuid) UNIQUE
 #
 
 require "rails_helper"
 
 RSpec.describe Consent, type: :model do
   subject(:consent) { build :consent }
+
+  it { is_expected.to be_valid }
 
   it { is_expected.to validate_uniqueness_of(:key).case_insensitive }
   it { is_expected.to validate_presence_of(:key) }
