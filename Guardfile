@@ -38,11 +38,6 @@ guard :rubocop, all_on_start: false, cli: ['--rails'] do
   watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 end
 
-guard 'migrate' do
-  watch(%r{^db/migrate/(\d+).+\.rb})
-  watch('db/seeds.rb')
-end
-
 guard 'bundler_audit', run_on_start: true do
   watch('Gemfile.lock')
 end

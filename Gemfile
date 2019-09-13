@@ -3,12 +3,12 @@
 source "https://rubygems.org"
 git_source(:github) {|repo| "https://github.com/#{repo}.git" }
 
-ruby "2.5.1"
+ruby "2.6.4"
 
 gem "dotenv-rails", groups: %i[development test], require: "dotenv/rails-now"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 5.2"
+gem "rails", "~> 6"
 
 gem "attr_encrypted" # and this we will use for per field encryption
 gem "blind_index"
@@ -58,13 +58,11 @@ group :development, :test do
   gem "guard-brakeman", require: false
   gem "guard-bundler", require: false
   gem "guard-bundler-audit", require: false
-  gem "guard-migrate", require: false
   gem "guard-rails_best_practices", github: "logankoester/guard-rails_best_practices", require: false
   gem "guard-reek", require: false
   gem "guard-rspec", require: false
   gem "guard-rubocop", require: false
   gem "guard-rubybeautify", require: false
-  gem "pg-eyeballs"
   gem "pry-rescue"
   gem "rspec-rails"
   gem "rubocop"
