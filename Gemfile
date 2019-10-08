@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) {|repo| "https://github.com/#{repo}.git" }
 
-ruby "2.6.4"
+ruby "2.6.5"
 
 gem "dotenv-rails", groups: %i[development test], require: "dotenv/rails-now"
 
@@ -14,6 +14,7 @@ gem "attr_encrypted" # and this we will use for per field encryption
 gem "blind_index"
 gem "lockbox"
 gem "rbnacl"
+gem "vault", require: false
 
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"

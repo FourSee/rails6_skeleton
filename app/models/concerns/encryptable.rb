@@ -17,10 +17,6 @@ module Encryptable
     end
   end
 
-  def redis_connection
-    @redis_connection ||= $encryption_key_redis # rubocop:disable Style/GlobalVars
-  end
-
   def encryption_key
     @encryption_key ||= get_or_generate_encryption_key
   end
@@ -29,18 +25,18 @@ module Encryptable
   # rubocop:disable Naming/AccessorMethodName
   def get_or_generate_encryption_key
     if self.class.name == "User"
-      return redis_connection.get(encryption_key_id) if persisted?
+      return extract_encryption_key if persisted?
 
       return create_encryption_key
     end
-    return redis_connection.get(encryption_key_id) if defined?(encryption_key_id)
+    return extract_encryption_key if defined?(encryption_key_id)
 
     raise "You need to override an encryption_key method - no direct connection to user_id"
   end
   # rubocop:enable Naming/AccessorMethodName
 
   def delete_encryption_key
-    redis_connection.del(encryption_key_id)
+    Vault.logical.delete(encryption_key_id)
   end
 
   # we might only need this in our User model but it's still part of our encryptable library
@@ -51,11 +47,9 @@ module Encryptable
 
   # this saves our encryption key in Redis so it's persistent
   def save_encryption_key
-    key = encryption_key_id
-    # just to stay on safe side
-    raise "Encryption key already exists" if redis_connection.get(key)
+    raise "Encryption key already exists" if extract_encryption_key
 
-    redis_connection.set(key, encryption_key)
+    Vault.logical.write(encryption_key_id, data: {encryption_key: encryption_key})
   end
 
   # what do return in attribute field when there's no key
@@ -77,8 +71,12 @@ module Encryptable
   end
 
   def encryption_key_id
-    return uuid if self.class.name == "User" && defined?(uuid)
+    return "secret/data/user_encryption_key_#{uuid}" if self.class.name == "User" && defined?(uuid)
 
-    user.try(:uuid)
+    "secret/data/user_encryption_key_#{user.try(:uuid)}"
+  end
+
+  def extract_encryption_key
+    @extract_encryption_key ||= Vault.logical.read(encryption_key_id)&.data&.[](:data)&.[](:encryption_key)
   end
 end
